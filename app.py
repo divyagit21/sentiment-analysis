@@ -7,7 +7,7 @@ from tensorflow.keras.preprocessing.sequence import pad_sequences
 tokenizer = pickle.load(open('tokenizer.pkl', 'rb'))
 model = pickle.load(open('model.pkl', 'rb'))
 
-st.set_page_config(page_title="Sentiment Analyzer", page_icon="🧠", layout="centered")
+st.set_page_config(page_title="Sentiment Analyzer", layout="centered")
 
 st.markdown("""
     <style>
@@ -40,31 +40,31 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# App Title
+# app Title
 st.markdown('<div class="main-title">Real-Time Text Sentiment Analyzer</div>', unsafe_allow_html=True)
 
-# User Input
+# user Input
 user_input = st.text_area("Enter your text below to analyze sentiment:", "", height=150)
 
-# Action button
-if st.button("🔍 Analyze Sentiment"):
+# action button
+if st.button("Analyze Sentiment"):
     if user_input.strip():
         # Tokenize and pad the input
         tokenized_input = tokenizer.texts_to_sequences([user_input])
         max_len = 200
         padded_input = pad_sequences(tokenized_input, maxlen=max_len)
 
-        # Predict
+        # prediction
         prediction = model.predict(padded_input)
         prob = prediction[0][0]
 
-        # Determine sentiment
-        sentiment = "Positive 😊" if prob > 0.5 else "Negative 😞"
+        # sentiment determining
+        sentiment = "Positive" if prob > 0.5 else "Negative"
         css_class = "positive" if prob > 0.5 else "negative"
 
-        # Display styled result
+        # result
         st.markdown(f'<div class="result-box {css_class}">Predicted Sentiment: {sentiment}<br>'
                     f'<div class="confidence">Confidence: {prob:.2%}</div></div>',
                     unsafe_allow_html=True)
     else:
-        st.warning("⚠️ Please enter some text to analyze.")
+        st.warning("Please enter some text to analyze.")
